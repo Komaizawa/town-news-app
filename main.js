@@ -1,6 +1,10 @@
 const folderId = '1Glaka8avoQqVXWY7eO7CNsThnkQ1lLxN';
 const apiKey = 'AIzaSyA5UShZQ__DiXhhSLjgHK5XEzGSesKZtnA';
 
+gapi.load('client', () => {
+  gapi.client.init({ apiKey }).then(listAllPDFs);
+});
+
 async function listAllPDFs() {
   const allFiles = await fetchAllFiles();
 
@@ -93,8 +97,3 @@ function displayGroupedFiles(folderMap) {
     container.appendChild(section);
   });
 }
-
-
-gapi.load('client', () => {
-  gapi.client.init({ apiKey }).then(listAllPDFs);
-});
