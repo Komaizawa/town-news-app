@@ -38,10 +38,13 @@ async function fetchAllFiles() {
       q: `'${folderId}' in parents or mimeType='application/vnd.google-apps.folder' or mimeType='application/pdf'`,
       fields: "nextPageToken, files(id, name, mimeType, parents, createdTime)",
       pageSize: 1000,
-      pageToken: pageToken,
-      key: apiKey
+      pageToken: pageToken
+      // 👇 ❌ここに `key: apiKey` を入れない！
     });
-    files = files.concat(res.result.files);
+
+    if (res.result.files) {
+      files = files.concat(res.result.files);
+    }
     pageToken = res.result.nextPageToken;
   } while (pageToken);
   return files;
