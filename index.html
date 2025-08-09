@@ -47,6 +47,11 @@
         const data = await res.json();
         console.log("APIレスポンス:", data);
         
+        // "Loading..."を消す
+        if (parentElement.innerHTML === "Loading...") {
+          parentElement.innerHTML = "";
+        }
+
         const folderElement = document.createElement("ul");
         parentElement.appendChild(folderElement);
 
@@ -62,10 +67,7 @@
               listItem.textContent = file.name;
               // フォルダーをクリックしたときにその内容を表示
               listItem.onclick = () => {
-                const isHidden = folderElement.classList.toggle("hidden");
-                if (!isHidden) {
-                  listFiles(file.id, listItem);
-                }
+                listFiles(file.id, listItem);
               };
             } else {
               const link = document.createElement("a");
