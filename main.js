@@ -28,7 +28,7 @@ async function listFiles(folderId, parentElement) {
         if (file.mimeType === "application/vnd.google-apps.folder") {
           listItem.classList.add("folder");
           listItem.textContent = file.name;
-
+      
           // フォルダーをクリックしたときの処理
           listItem.onclick = async (event) => {
             event.stopPropagation(); // 親フォルダのクリックイベントを停止
@@ -37,7 +37,7 @@ async function listFiles(folderId, parentElement) {
               subFolder.classList.toggle("hidden");
               return;
             }
-
+      
             // 新しいフォルダーの内容を取得して表示
             const subFolderElement = document.createElement("ul");
             listItem.appendChild(subFolderElement);
@@ -48,10 +48,17 @@ async function listFiles(folderId, parentElement) {
           link.href = `https://drive.google.com/file/d/${file.id}/view`;
           link.target = "_blank"; // 新しいタブで開く
           link.textContent = file.name;
+      
+          // PDFファイルのリンクをクリックしたときの処理
+          link.onclick = (event) => {
+            event.stopPropagation(); // 親フォルダのクリックイベントを停止
+          };
+      
           listItem.appendChild(link);
         }
         folderElement.appendChild(listItem);
       });
+      
     }
   } catch (e) {
     console.error("エラー:", e);
