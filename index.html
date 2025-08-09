@@ -41,18 +41,17 @@
 
   <script>
     const apiKey = "AIzaSyA5UShZQ__DiXhhSLjgHK5XEzGSesKZtnA"; // ここにAPIキー（文字列）を貼る
-    const folderId = "1Glaka8avoQqVXWY7eO7CNsThnkQ1lLxN"; // ここに対象フォルダのID
+    const folderId = "1wcGSsdrv0IDHzDiaS54Bf3RUj82wuavs"; // ここに対象フォルダのID
 
-    async function listFiles(folderId) {
+    async function listFiles(folderId, parentElement) {
       const url = `https://www.googleapis.com/drive/v3/files?q='${folderId}'+in+parents&key=${apiKey}&fields=files(id,name,mimeType)`;
       try {
         const res = await fetch(url);
         const data = await res.json();
         console.log("APIレスポンス:", data);
         
-        const fileList = document.getElementById("fileList");
         const folderElement = document.createElement("ul");
-        fileList.appendChild(folderElement);
+        parentElement.appendChild(folderElement);
 
         if (data.files.length === 0) {
           const emptyItem = document.createElement("li");
@@ -79,18 +78,18 @@
         console.error("エラー:", e);
         const errorItem = document.createElement("li");
         errorItem.textContent = "API呼び出しでエラーが発生しました。詳細はConsoleを確認してください。";
-        fileList.appendChild(errorItem);
+        parentElement.appendChild(errorItem);
       }
     }
 
     function toggleFolder(folderElement, folderId) {
       const isHidden = folderElement.classList.toggle("hidden");
       if (!isHidden) {
-        listFiles(folderId);
+        listFiles(folderId, folderElement);
       }
     }
 
-    listFiles(folderId);
+    listFiles(folderId, document.getElementById("fileList"));
   </script>
 </body>
 </html>
