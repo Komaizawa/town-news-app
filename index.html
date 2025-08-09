@@ -27,11 +27,7 @@
       text-decoration: underline;
     }
     .folder {
-      cursor: pointer;
       font-weight: bold;
-    }
-    .hidden {
-      display: none;
     }
   </style>
 </head>
@@ -63,7 +59,8 @@
             if (file.mimeType === "application/vnd.google-apps.folder") {
               listItem.classList.add("folder");
               listItem.textContent = file.name;
-              listItem.onclick = () => toggleFolder(folderElement, file.id);
+              // 再帰的にフォルダーの内容を表示
+              listFiles(file.id, listItem);
             } else {
               const link = document.createElement("a");
               link.href = `https://drive.google.com/file/d/${file.id}/view`;
@@ -79,14 +76,6 @@
         const errorItem = document.createElement("li");
         errorItem.textContent = "API呼び出しでエラーが発生しました。詳細はConsoleを確認してください。";
         parentElement.appendChild(errorItem);
-      }
-    }
-
-    function toggleFolder(folderElement, folderId) {
-      const isHidden = folderElement.classList.toggle("hidden");
-      if (!isHidden) {
-        // フォルダーを展開する際に、既存の内容をクリアせずに新しいリストを追加
-        listFiles(folderId, folderElement);
       }
     }
 
