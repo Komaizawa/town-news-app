@@ -1,13 +1,60 @@
-<!-- index.html -->
 <!DOCTYPE html>
-<html>
-  <head>
-    <title>町内会広報アーカイブ</title>
-    <script src="https://apis.google.com/js/api.js"></script>
-    <script defer src="main.js"></script>
-  </head>
-  <body>
-    <h1>町内会広報アーカイブ</h1>
-    <div id="file-list">読み込み中...</div>
-  </body>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Drive API Test</title>
+</head>
+<body>
+  <h1>Google Drive API Test</h1>
+  <pre id="output">Loading...</pre>
+
+  <script>
+    const apiKey = "AIzaSyA5UShZQ__DiXhhSLjgHK5XEzGSesKZtnA"; // ここにAPIキー（文字列）を貼る
+    const folderId = "1Glaka8avoQqVXWY7eO7CNsThnkQ1lLxN"; // ここに対象フォルダのID
+
+    function handleClientLoad() {
+      gapi.load("client", initClient);
+    }
+
+    function initClient() {
+      gapi.client
+        .init({
+          apiKey: apiKey,
+          discoveryDocs: [
+            "https://www.googleapis.com/discovery/v1/apis/drive/v3/rest",
+          ],
+        })
+        .then(listFiles)
+        .catch((error) => {
+          document.getElementById("output").textContent =
+            "Init error: " + JSON.stringify(error, null, 2);
+        });
+    }
+
+    function listFiles() {
+      gapi.client.drive.files
+        .list({
+          q: `'${folderId}' in parents and mimeType='application/pdf'`,
+          fields: "files(id, name, webViewLink)",
+        })
+        .then((response) => {
+          document.getElementById("output").textContent = JSON.stringify(
+            response.result.files,
+            null,
+            2
+          );
+        })
+        .catch((error) => {
+          document.getElementById("output").textContent =
+            "List error: " + JSON.stringify(error, null, 2);
+        });
+    }
+  </script>
+
+  <script async defer src="https://apis.google.com/js/api.js"
+    onload="this.onload=function(){};handleClientLoad()"
+    onreadystatechange="if (this.readyState === 'complete') this.onload()">
+  </script>
+</body>
 </html>
