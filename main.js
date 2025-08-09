@@ -26,10 +26,19 @@ async function fetchAllFiles() {
       pageToken: pageToken
     });
 
-    if (res.result.files) {
+    // Check if res and res.result are defined before accessing res.result.files
+    if (res && res.result && res.result.files) {
       files = files.concat(res.result.files);
+    } else if (res && res.error) {
+      // Log the error from the API response if available
+      console.error('API Error:', res.error);
+      throw new Error('Failed to fetch files from Google Drive API.');
+    } else {
+        // Handle cases where res or res.result is undefined without an explicit error object
+        console.error('Unexpected API response structure:', res);
+         throw new Error('Unexpected response from Google Drive API.');
     }
-    pageToken = res.result.nextPageToken;
+    pageToken = res.result ? res.result.nextPageToken : null; // Safely access nextPageToken
   } while (pageToken);
 
   return files;
