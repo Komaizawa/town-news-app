@@ -4,10 +4,33 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Drive API Test</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 20px;
+    }
+    h1 {
+      color: #333;
+    }
+    ul {
+      list-style-type: none;
+      padding: 0;
+    }
+    li {
+      margin: 10px 0;
+    }
+    a {
+      text-decoration: none;
+      color: #007BFF;
+    }
+    a:hover {
+      text-decoration: underline;
+    }
+  </style>
 </head>
 <body>
   <h1>Google Drive API Test</h1>
-  <pre id="output">Loading...</pre>
+  <ul id="fileList">Loading...</ul>
 
   <script>
     const apiKey = "AIzaSyA5UShZQ__DiXhhSLjgHK5XEzGSesKZtnA"; // ここにAPIキー（文字列）を貼る
@@ -15,17 +38,32 @@
 
     async function listFiles() {
       const url =
-        `https://www.googleapis.com/drive/v3/files?q='${folderId}'+in+parents+and+mimeType='application/pdf'&key=${apiKey}`;
+        `https://www.googleapis.com/drive/v3/files?q='${folderId}'+in+parents+and+mimeType='application/pdf'&key=${apiKey}&fields=files(id,name)`;
       try {
         const res = await fetch(url);
         const data = await res.json();
         console.log("APIレスポンス:", data);
-        document.getElementById("output").textContent =
-          JSON.stringify(data, null, 2);
+        
+        const fileList = document.getElementById("fileList");
+        fileList.innerHTML = ""; // 既存の内容をクリア
+
+        if (data.files.length === 0) {
+          fileList.innerHTML = "<li>PDFファイルが見つかりませんでした。</li>";
+        } else {
+          data.files.forEach(file => {
+            const listItem = document.createElement("li");
+            const link = document.createElement("a");
+            link.href = `https://drive.google.com/file/d/${file.id}/view`;
+            link.target = "_blank"; // 新しいタブで開く
+            link.textContent = file.name;
+            listItem.appendChild(link);
+            fileList.appendChild(listItem);
+          });
+        }
       } catch (e) {
         console.error("エラー:", e);
-        document.getElementById("output").textContent =
-          "API呼び出しでエラーが発生しました。詳細はConsoleを確認してください。";
+        document.getElementById("fileList").innerHTML =
+          "<li>API呼び出しでエラーが発生しました。詳細はConsoleを確認してください。</li>";
       }
     }
 
