@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Drive API Test</title>
+  <title>駒井沢町ファイル閲覧サイト</title>
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -30,11 +30,14 @@
       font-weight: bold;
       cursor: pointer;
     }
+    .hidden {
+      display: none;
+    }
   </style>
 </head>
 <body>
-  <h1>Google Drive API Test</h1>
-  <ul id="fileList">Loading...</ul>
+  <h1>駒井沢町自治会ファイル閲覧サイト</h1>
+  <ul id="fileList">クリックして展開してください</ul>
 
   <script>
     const apiKey = "AIzaSyA5UShZQ__DiXhhSLjgHK5XEzGSesKZtnA"; // ここにAPIキー（文字列）を貼る
@@ -60,12 +63,20 @@
             if (file.mimeType === "application/vnd.google-apps.folder") {
               listItem.classList.add("folder");
               listItem.textContent = file.name;
-              // フォルダーをクリックしたときにその内容を表示
-              listItem.onclick = () => {
-                const isHidden = folderElement.classList.toggle("hidden");
-                if (!isHidden) {
-                  listFiles(file.id, listItem);
+
+              // フォルダーをクリックしたときの処理
+              listItem.onclick = async (event) => {
+                event.stopPropagation(); // 親フォルダのクリックイベントを停止
+                const subFolder = listItem.querySelector("ul");
+                if (subFolder) {
+                  subFolder.classList.toggle("hidden");
+                  return;
                 }
+
+                // 新しいフォルダーの内容を取得して表示
+                const subFolderElement = document.createElement("ul");
+                listItem.appendChild(subFolderElement);
+                await listFiles(file.id, subFolderElement);
               };
             } else {
               const link = document.createElement("a");
