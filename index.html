@@ -87,11 +87,6 @@
       if (!isHidden) {
         // フォルダーを展開する際に、既存の内容をクリアせずに新しいリストを追加
         listFiles(folderId, folderElement);
-      } else {
-        // フォルダーを折りたたむ場合は、子要素をクリア
-        while (folderElement.firstChild) {
-          folderElement.removeChild(folderElement.firstChild);
-        }
       }
     }
 
