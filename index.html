@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>駒井沢町ファイル閲覧サイト</title>
+  <title>Drive API Test</title>
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -58,6 +58,13 @@
           emptyItem.textContent = "フォルダーは空です。";
           folderElement.appendChild(emptyItem);
         } else {
+          // フォルダを月の順にソート
+          data.files.sort((a, b) => {
+            const monthA = getMonthNumber(a.name);
+            const monthB = getMonthNumber(b.name);
+            return monthA - monthB;
+          });
+          
           data.files.forEach(file => {
             const listItem = document.createElement("li");
             if (file.mimeType === "application/vnd.google-apps.folder") {
@@ -94,6 +101,25 @@
         errorItem.textContent = "API呼び出しでエラーが発生しました。詳細はConsoleを確認してください。";
         parentElement.appendChild(errorItem);
       }
+    }
+
+    // フォルダ名から月の数値を取得する関数
+    function getMonthNumber(monthName) {
+      const monthMap = {
+        "1月": 1,
+        "2月": 2,
+        "3月": 3,
+        "4月": 4,
+        "5月": 5,
+        "6月": 6,
+        "7月": 7,
+        "8月": 8,
+        "9月": 9,
+        "10月": 10,
+        "11月": 11,
+        "12月": 12
+      };
+    return monthMap[monthName] || 0; // デフォルトは0
     }
 
     // 初期フォルダーのリストを表示
