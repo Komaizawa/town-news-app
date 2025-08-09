@@ -85,16 +85,12 @@
     function toggleFolder(folderElement, folderId) {
       const isHidden = folderElement.classList.toggle("hidden");
       if (!isHidden) {
-        // 既存の内容をクリアせずに新しいリストを追加
+        // フォルダーを展開する際に、既存の内容をクリアせずに新しいリストを追加
         listFiles(folderId, folderElement);
-      } else {
-        // フォルダーを折りたたむ場合は、子要素をクリア
-        while (folderElement.firstChild) {
-          folderElement.removeChild(folderElement.firstChild);
-        }
       }
     }
 
+    // 初期フォルダーのリストを表示
     listFiles(folderId, document.getElementById("fileList"));
   </script>
 </body>
