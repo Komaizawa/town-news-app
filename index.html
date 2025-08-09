@@ -13,44 +13,20 @@
     const apiKey = "AIzaSyA5UShZQ__DiXhhSLjgHK5XEzGSesKZtnA"; // ここにAPIキー（文字列）を貼る
     const folderId = "1wcGSsdrv0IDHzDiaS54Bf3RUj82wuavs"; // ここに対象フォルダのID
 
-    function handleClientLoad() {
-      gapi.load("client", initClient);
-    }
+    async function listFiles() {
+    const url = `https://www.googleapis.com/drive/v3/files?q='${folderId}'+in+parents+and+mimeType='application/pdf'&key=${apiKey}`;
+    try {
+      const res = await fetch(url);
+      const data = await res.json();
+      console.log("APIレスポンス:", data); // デバッグ用
+      document.getElementById("output").textContent = JSON.stringify(data, null, 2);
+    } catch (e) {
+    console.error("エラー:", e);
+  }
+}
 
-    function initClient() {
-      gapi.client
-        .init({
-          apiKey: apiKey,
-          discoveryDocs: [
-            "https://www.googleapis.com/discovery/v1/apis/drive/v3/rest",
-          ],
-        })
-        .then(listFiles)
-        .catch((error) => {
-          document.getElementById("output").textContent =
-            "Init error: " + JSON.stringify(error, null, 2);
-        });
-    }
-
-    function listFiles() {
-      gapi.client.drive.files
-        .list({
-          q: `'${folderId}' in parents and mimeType='application/pdf'`,
-          fields: "files(id, name, webViewLink)",
-        })
-        .then((response) => {
-          document.getElementById("output").textContent = JSON.stringify(
-            response.result.files,
-            null,
-            2
-          );
-        })
-        .catch((error) => {
-          document.getElementById("output").textContent =
-            "List error: " + JSON.stringify(error, null, 2);
-        });
-    }
-  </script>
+listFiles();
+</script>
 
   <script async defer src="https://apis.google.com/js/api.js"
     onload="this.onload=function(){};handleClientLoad()"
