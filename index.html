@@ -14,23 +14,22 @@
     const folderId = "1wcGSsdrv0IDHzDiaS54Bf3RUj82wuavs"; // ここに対象フォルダのID
 
     async function listFiles() {
-    const url = `https://www.googleapis.com/drive/v3/files?q='${folderId}'+in+parents+and+mimeType='application/pdf'&key=${apiKey}`;
-    try {
-      const res = await fetch(url);
-      const data = await res.json();
-      console.log("APIレスポンス:", data); // デバッグ用
-      document.getElementById("output").textContent = JSON.stringify(data, null, 2);
-    } catch (e) {
-    console.error("エラー:", e);
-  }
-}
+      const url =
+        `https://www.googleapis.com/drive/v3/files?q='${folderId}'+in+parents+and+mimeType='application/pdf'&key=${apiKey}`;
+      try {
+        const res = await fetch(url);
+        const data = await res.json();
+        console.log("APIレスポンス:", data);
+        document.getElementById("output").textContent =
+          JSON.stringify(data, null, 2);
+      } catch (e) {
+        console.error("エラー:", e);
+        document.getElementById("output").textContent =
+          "API呼び出しでエラーが発生しました。詳細はConsoleを確認してください。";
+      }
+    }
 
-listFiles();
-</script>
-
-  <script async defer src="https://apis.google.com/js/api.js"
-    onload="this.onload=function(){};handleClientLoad()"
-    onreadystatechange="if (this.readyState === 'complete') this.onload()">
+    listFiles();
   </script>
 </body>
 </html>
